@@ -69,25 +69,31 @@ const images = [
     ];
 
     images.forEach((imageSrc) => {
-      if (typeof imageSrc === 'string') {
-        const galleryItem = document.createElement('div');
-        galleryItem.classList.add('gallery-item');
+      const galleryItem = document.createElement('li');
+      galleryItem.classList.add('gallery-item');
   
-        const galleryImage = document.createElement('img');
-        galleryImage.classList.add('gallery-image');
-        galleryImage.setAttribute('src', imageSrc);
-        galleryImage.setAttribute('data-source', imageSrc);
+      const galleryLink = document.createElement('a');
+      galleryLink.classList.add('gallery-link');
+      galleryLink.href = imageSrc.original;
   
-        galleryItem.appendChild(galleryImage);
-        galleryContainer.appendChild(galleryItem);
-      } 
+      const galleryImage = document.createElement('img');
+      galleryImage.classList.add('gallery-image');
+      galleryImage.src = imageSrc.preview;
+      galleryImage.dataset.source = imageSrc.original;
+      galleryImage.alt = imageSrc.description;
+  
+      galleryLink.appendChild(galleryImage);
+      galleryItem.appendChild(galleryLink);
+      galleryContainer.appendChild(galleryItem);
     });
   
     function modalOpen(event) {
       event.preventDefault();
   
-      if (event.target.classList.contains('gallery-image')) {
-        const largeImageSource = event.target.dataset.source;
+      const target = event.target.tagName === 'IMG' ? event.target : event.target.querySelector('img');
+  
+      if (target) {
+        const largeImageSource = target.dataset.source;
   
         basicLightbox.create(`
           <img width="1400" height="900" src="${largeImageSource}">
