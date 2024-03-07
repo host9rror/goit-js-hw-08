@@ -1,3 +1,7 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const galleryContainer = document.querySelector('.gallery');
+
+
 const images = [
       {
         preview:
@@ -64,20 +68,30 @@ const images = [
       },
     ];
 
-document.addEventListener('DOMContentLoaded', () => {
-  const galleryPhotos = document.querySelectorAll('.gallery-item');
-
-  function modalOpen(event) {
-    event.preventDefault();
-
-    const largeImageSource = event.currentTarget.querySelector('.gallery-image').dataset.source;
-
-    basicLightbox.create(`
-		<img width="1400" height="900" src="${largeImageSource}">
-	`).show();
-  }
-
-  galleryPhotos.forEach((item) => {
-    item.addEventListener('click', modalOpen);
-  })
-})
+    images.forEach((imageSrc) => {
+      const galleryItem = document.createElement('div');
+      galleryItem.classList.add('gallery-item');
+  
+      const galleryImage = document.createElement('img');
+      galleryImage.classList.add('gallery-image');
+      galleryImage.setAttribute('src', imageSrc);
+      galleryImage.setAttribute('data-source', imageSrc);
+  
+      galleryItem.appendChild(galleryImage);
+      galleryContainer.appendChild(galleryItem);
+    });
+  
+    function modalOpen(event) {
+      event.preventDefault();
+  
+      if (event.target.closest('.gallery-image')) {
+        const largeImageSource = event.target.closest('.gallery-item').querySelector('.gallery-image').dataset.source;
+  
+        basicLightbox.create(`
+          <img width="1400" height="900" src="${largeImageSource}">
+        `).show();
+      }
+    }
+  
+    galleryContainer.addEventListener('click', modalOpen);
+  });
